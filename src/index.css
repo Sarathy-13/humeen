@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background: #0a0a0a;
+    font-family: 'Inter', sans-serif;
+    cursor: none;
+}
+
+.grain-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.outline-text {
+    -webkit-text-stroke: 1.5px white;
+    color: transparent;
+}
+
+.difference-mode {
+    mix-blend-mode: difference;
+}
+
+video {
+    object-fit: cover;
+    width: 100vw;
+    height: 100vh;
+    will-change: transform;
+}
+
+.hero-3d-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.hero-spline-viewer {
+    display: block;
+    width: 100%;
+    height: 100%;
+    filter: saturate(1.15) contrast(1.05);
+}
+
+.hero-fallback-video {
+    opacity: 0.4;
+}
+
+.hero-3d-vignette {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at center, rgba(0, 112, 255, 0.18) 0%, rgba(0, 0, 0, 0.62) 62%), linear-gradient(180deg, rgba(0, 0, 0, 0.26) 0%, rgba(0, 0, 0, 0.74) 100%);
+}
+
+.custom-cursor {
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: difference;
+    will-change: transform;
+}
+
+.glass {
+    background: rgba(10, 10, 10, 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mega-menu {
+    transform-origin: top;
+    will-change: transform, opacity;
+}
+
+@keyframes bounce {
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+.scroll-indicator-line {
+    animation: bounce 2s infinite;
+}
+
+@keyframes heroSpotlight {
+    0%,
+    100% {
+        text-shadow: 0 0 0 rgba(255, 255, 255, 0), 0 0 26px rgba(255, 255, 255, 0.2);
+    }
+    50% {
+        text-shadow: 0 0 18px rgba(255, 255, 255, 0.35), 0 0 44px rgba(255, 255, 255, 0.3);
+    }
+}
+
+.hero-spotlight {
+    animation: heroSpotlight 5s ease-in-out infinite;
+}
+
+.home-section-reveal {
+    will-change: transform, opacity;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 28s linear infinite;
+}
+
+.marquee-track:hover {
+    animation-play-state: paused;
+}
+
+.marquee-wrapper {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-spotlight,
+    .scroll-indicator-line,
+    .marquee-track {
+        animation: none !important;
+    }
+}
