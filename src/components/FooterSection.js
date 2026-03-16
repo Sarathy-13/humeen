@@ -11,10 +11,10 @@ const FooterSection = () => {
     );
 
     return (
-        <footer className="bg-[#111111] border-t border-[#333] pt-20 pb-10 px-8">
+        <footer className="bg-[#111111] border-t border-[#333] pt-14 sm:pt-16 lg:pt-20 pb-8 sm:pb-10 px-4 sm:px-6 lg:px-8">
             <div className="max-w-[1400px] mx-auto">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-20">
-                    <div className="col-span-2 md:col-span-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 sm:gap-12 mb-14 sm:mb-16 lg:mb-20">
+                    <div className="sm:col-span-2 md:col-span-1">
                         <a href="#" className="text-white text-2xl font-black tracking-widest block mb-5">
                             HUMEEN.
                         </a>
@@ -69,9 +69,9 @@ const FooterSection = () => {
                     </div>
                 </div>
 
-                <div className="border-t border-[#1a1a1a] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <p className="text-[#333] text-xs tracking-widest uppercase">(C) 2026 HUMEEN. All Rights Reserved.</p>
-                    <div className="flex gap-6">
+                <div className="border-t border-[#1a1a1a] pt-6 sm:pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p className="text-[#333] text-[10px] sm:text-xs tracking-widest uppercase text-center md:text-left">(C) 2026 HUMEEN. All Rights Reserved.</p>
+                    <div className="flex flex-wrap justify-center gap-5 sm:gap-6">
                         <a href="#" className="text-[#333] text-xs hover:text-[#666] transition-colors">
                             Privacy Policy
                         </a>

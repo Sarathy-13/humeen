@@ -140,50 +140,50 @@ const CaseStudiesPage = ({ onBack }) => {
 
     return (
         <div ref={pageRef} data-page-root="cases" className="bg-black min-h-screen font-sans selection:bg-white selection:text-black">
-            <header className="fixed top-0 left-0 w-full z-[100] glass px-8 py-6 flex items-center justify-between cases-enter-stagger">
+            <header className="fixed top-0 left-0 w-full z-[100] glass px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 flex items-center justify-between cases-enter-stagger">
                 <button onClick={onBack} className="text-white/50 hover:text-white transition-colors flex items-center gap-2 text-sm font-bold uppercase tracking-widest">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
                     </svg>
-                    Back
+                    <span className="hidden sm:inline">Back</span>
                 </button>
-                <a href="#" className="text-white text-2xl font-black tracking-widest">
+                <a href="#" className="text-white text-lg sm:text-xl md:text-2xl font-black tracking-widest">
                     HUMEEN.
                 </a>
-                <span className="text-white/20 text-xs uppercase tracking-widest font-bold">Customer Cases</span>
+                <span className="hidden md:block text-white/20 text-xs uppercase tracking-widest font-bold">Customer Cases</span>
             </header>
 
-            <section className="pt-48 pb-24 px-8 border-b border-white/5">
+            <section className="pt-32 sm:pt-40 lg:pt-48 pb-16 sm:pb-20 lg:pb-24 px-4 sm:px-6 lg:px-8 border-b border-white/5">
                 <div className="max-w-[1400px] mx-auto">
                     <p className="text-white/30 text-xs uppercase tracking-[0.4em] font-black mb-6 cases-enter-stagger">Customer Cases</p>
-                    <h1 className="text-7xl md:text-[9rem] font-black text-white leading-none uppercase tracking-tighter mb-10 cases-headline">
+                    <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[9rem] font-black text-white leading-none uppercase tracking-tighter mb-8 sm:mb-10 cases-headline">
                         Case
                         <br />
                         Studies.
                     </h1>
-                    <p className="text-white/40 text-lg max-w-xl font-medium leading-relaxed cases-subline">
+                    <p className="text-white/40 text-base sm:text-lg max-w-xl font-medium leading-relaxed cases-subline">
                         Real results for ambitious brands. Every engagement is a partnership built on data, creativity, and relentless execution.
                     </p>
                 </div>
             </section>
 
-            <section className="py-16 px-8 border-b border-white/5">
-                <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 case-stats-grid">
+            <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 border-b border-white/5">
+                <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-5 sm:gap-8 case-stats-grid">
                     {[
                         { value: '50+', label: 'Clients Served' },
                         { value: 'EUR 12M+', label: 'Revenue Generated' },
                         { value: '8.3x', label: 'Average ROAS' },
                         { value: '94%', label: 'Client Retention' },
                     ].map((stat) => (
-                        <div key={stat.label} className="border-l border-white/10 pl-8 case-stats-item">
-                            <p className="text-4xl md:text-5xl font-black text-white mb-2">{stat.value}</p>
-                            <p className="text-white/30 text-xs uppercase tracking-widest font-bold">{stat.label}</p>
+                        <div key={stat.label} className="border-l border-white/10 pl-4 sm:pl-6 lg:pl-8 case-stats-item">
+                            <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-2">{stat.value}</p>
+                            <p className="text-white/30 text-[10px] sm:text-xs uppercase tracking-widest font-bold">{stat.label}</p>
                         </div>
                     ))}
                 </div>
             </section>
 
-            <section className="py-24 px-8">
+            <section className="py-14 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-[1400px] mx-auto flex flex-col gap-2">
                     {cases.map((c, i) => (
                         <div key={c.id} className="group relative overflow-hidden rounded-2xl border border-white/5 flex flex-col md:flex-row md:h-[520px] hover:border-white/20 transition-all duration-500 case-card">
@@ -193,23 +193,23 @@ const CaseStudiesPage = ({ onBack }) => {
                                 <span className="absolute top-6 left-6 px-4 py-1 bg-white text-black text-[10px] uppercase tracking-widest font-black rounded-full">{c.tag}</span>
                             </div>
 
-                            <div className={`w-full md:w-1/2 bg-[#0a0a0a] p-10 md:p-16 flex flex-col justify-between ${i % 2 === 1 ? 'md:order-1' : ''}`}>
+                            <div className={`w-full md:w-1/2 bg-[#0a0a0a] p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col justify-between ${i % 2 === 1 ? 'md:order-1' : ''}`}>
                                 <div>
-                                    <div className="flex items-center gap-4 mb-8">
-                                        <span className="text-white/20 text-6xl font-black leading-none">{c.id}</span>
+                                    <div className="flex items-center gap-4 mb-6 sm:mb-8">
+                                        <span className="text-white/20 text-4xl sm:text-5xl md:text-6xl font-black leading-none">{c.id}</span>
                                         <div>
                                             <p className="text-white font-black text-xl">{c.client}</p>
                                             <p className="text-white/30 text-xs uppercase tracking-widest">{c.category}</p>
                                         </div>
                                     </div>
                                     <h2 className="text-white text-2xl md:text-3xl font-black leading-tight mb-6">{c.headline}</h2>
-                                    <p className="text-white/40 text-sm leading-relaxed mb-10">{c.description}</p>
+                                    <p className="text-white/40 text-sm leading-relaxed mb-8 sm:mb-10">{c.description}</p>
                                 </div>
 
-                                <div className="border-t border-white/5 pt-8 grid grid-cols-3 gap-4">
+                                <div className="border-t border-white/5 pt-6 sm:pt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
                                     {c.results.map((r) => (
                                         <div key={r.label}>
-                                            <p className="text-white text-2xl font-black mb-1">{r.value}</p>
+                                            <p className="text-white text-xl sm:text-2xl font-black mb-1">{r.value}</p>
                                             <p className="text-white/30 text-[10px] uppercase tracking-widest font-bold">{r.label}</p>
                                         </div>
                                     ))}
@@ -220,14 +220,14 @@ const CaseStudiesPage = ({ onBack }) => {
                 </div>
             </section>
 
-            <section className="py-32 px-8 text-center border-t border-white/5 cases-cta">
+            <section className="py-20 sm:py-24 lg:py-32 px-4 sm:px-6 lg:px-8 text-center border-t border-white/5 cases-cta">
                 <p className="text-white/30 text-xs uppercase tracking-[0.4em] font-black mb-6">Ready to be next?</p>
-                <h2 className="text-5xl md:text-7xl font-black text-white leading-tight mb-10">
+                <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight mb-8 sm:mb-10">
                     Let's build your
                     <br />
                     legacy together.
                 </h2>
-                <button onClick={onBack} className="px-12 py-5 bg-white text-black text-xs font-black uppercase tracking-widest hover:bg-black hover:text-white border border-white transition-all duration-300 rounded-full">
+                <button onClick={onBack} className="px-8 sm:px-12 py-4 sm:py-5 bg-white text-black text-xs font-black uppercase tracking-widest hover:bg-black hover:text-white border border-white transition-all duration-300 rounded-full">
                     Work with us
                 </button>
             </section>

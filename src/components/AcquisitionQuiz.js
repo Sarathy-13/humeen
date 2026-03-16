@@ -74,28 +74,28 @@ const AcquisitionQuiz = () => {
     };
 
     return (
-        <section className="py-24 px-4 bg-black">
+        <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 bg-black">
             <div className="max-w-4xl mx-auto relative">
-                <div className="absolute -top-12 left-0 flex items-center gap-4 opacity-60">
-                    <div className="w-12 h-12 relative animate-pulse">
+                <div className="absolute -top-10 sm:-top-12 left-0 flex items-center gap-3 sm:gap-4 opacity-60">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 relative animate-pulse">
                         <svg className="w-full h-full text-[#0070FF]" viewBox="0 0 100 100" fill="none">
                             <path d="M10 10 C 40 10, 60 40, 80 80" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" />
                             <path d="M75 80 L 80 80 L 80 75" stroke="currentColor" strokeWidth="2" />
                         </svg>
                     </div>
-                    <span className="text-xs uppercase tracking-widest font-black text-white">Answer 3 questions</span>
+                    <span className="text-[10px] sm:text-xs uppercase tracking-widest font-black text-white">Answer 3 questions</span>
                 </div>
 
-                <div ref={cardRef} className="bg-[#121212] rounded-2xl p-8 md:p-16 shadow-2xl border border-white/10">
+                <div ref={cardRef} className="bg-[#121212] rounded-2xl p-5 sm:p-8 md:p-12 lg:p-16 shadow-2xl border border-white/10">
                     <div ref={questionRef}>
-                        <div className="mb-12">
+                        <div className="mb-8 sm:mb-10 md:mb-12">
                             <p className="text-[#0070FF] text-xs uppercase tracking-widest font-bold mb-4">
                                 Question {step} OF {questions.length}
                             </p>
-                            <h3 className="text-3xl md:text-5xl font-black text-white leading-tight">{currentQuestion.text}</h3>
+                            <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight">{currentQuestion.text}</h3>
                         </div>
 
-                        <div className="space-y-4 mb-12 min-h-[220px]">
+                        <div className="space-y-3 sm:space-y-4 mb-8 sm:mb-10 md:mb-12 min-h-[190px] sm:min-h-[220px]">
                             {currentQuestion.type === 'email' ? (
                                 <div className="animate-fade-in">
                                     <input
@@ -103,29 +103,29 @@ const AcquisitionQuiz = () => {
                                         value={answers[step] || ''}
                                         onChange={(e) => handleOptionChange(e.target.value)}
                                         placeholder="Your email address"
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-8 py-6 text-xl text-white focus:border-[#0070FF] outline-none transition-all"
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 text-base sm:text-lg md:text-xl text-white focus:border-[#0070FF] outline-none transition-all"
                                     />
                                 </div>
                             ) : (
                                 currentQuestion.options.map((option, index) => (
                                     <label
                                         key={`${option}-${index}`}
-                                        className={`flex items-center gap-6 p-6 rounded-xl border transition-all cursor-pointer group ${
+                                        className={`flex items-center gap-4 sm:gap-6 p-4 sm:p-5 md:p-6 rounded-xl border transition-all cursor-pointer group ${
                                             answers[step] === option ? 'bg-[#0070FF]/10 border-[#0070FF]' : 'bg-white/5 border-white/5 hover:border-white/20'
                                         }`}
                                     >
                                         <input type="radio" name="quiz-answer" className="hidden" checked={answers[step] === option} onChange={() => handleOptionChange(option)} />
-                                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${answers[step] === option ? 'border-[#0070FF]' : 'border-white/20'}`}>
-                                            <div className={`w-3 h-3 bg-[#0070FF] rounded-full transition-transform duration-300 ${answers[step] === option ? 'scale-100' : 'scale-0'}`}></div>
+                                        <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center transition-all ${answers[step] === option ? 'border-[#0070FF]' : 'border-white/20'}`}>
+                                            <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 bg-[#0070FF] rounded-full transition-transform duration-300 ${answers[step] === option ? 'scale-100' : 'scale-0'}`}></div>
                                         </div>
-                                        <span className={`text-xl font-bold transition-colors ${answers[step] === option ? 'text-white' : 'text-white/60'}`}>{option}</span>
+                                        <span className={`text-base sm:text-lg md:text-xl font-bold transition-colors ${answers[step] === option ? 'text-white' : 'text-white/60'}`}>{option}</span>
                                     </label>
                                 ))
                             )}
                         </div>
                     </div>
 
-                    <div className="flex justify-between items-center border-t border-white/5 pt-10">
+                    <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-t border-white/5 pt-6 sm:pt-8 md:pt-10">
                         <button
                             onClick={() => handleStepTransition('prev')}
                             disabled={step === 1}
@@ -138,7 +138,7 @@ const AcquisitionQuiz = () => {
                         </button>
                         <button
                             onClick={() => (step === questions.length ? null : handleStepTransition('next'))}
-                            className="bg-[#0070FF] text-white px-10 py-5 rounded-full text-xs uppercase tracking-widest font-black hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(0,112,255,0.3)] shadow-xl"
+                            className="w-full sm:w-auto bg-[#0070FF] text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full text-xs uppercase tracking-widest font-black hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(0,112,255,0.3)] shadow-xl"
                         >
                             {step === questions.length ? 'Get Results' : 'Following'}
                         </button>

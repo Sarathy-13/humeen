@@ -32,11 +32,11 @@ const CustomersSection = () => {
     }, []);
 
     return (
-        <section ref={sectionRef} className="py-28 px-8 bg-[#000000]">
+        <section ref={sectionRef} className="py-16 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 bg-[#000000]">
             <div className="max-w-[1400px] mx-auto">
-                <div className="customers-header text-center mb-20 opacity-0">
+                <div className="customers-header text-center mb-12 sm:mb-16 lg:mb-20 opacity-0">
                     <p className="text-[#666] text-[10px] uppercase tracking-[0.4em] font-black mb-5">Our Customers</p>
-                    <h2 className="text-4xl md:text-6xl font-black text-white leading-tight">
+                    <h2 className="text-3xl sm:text-4xl lg:text-6xl font-black text-white leading-tight">
                         They trust us with
                         <br />
                         their growth.
@@ -46,13 +46,13 @@ const CustomersSection = () => {
                 <div className="marquee-wrapper py-6">
                     <div className="marquee-track">
                         {[...logos, ...logos].map((logo, i) => (
-                            <div key={`${logo.name}-${i}`} className="flex items-center justify-center px-16 group cursor-pointer">
+                            <div key={`${logo.name}-${i}`} className="flex items-center justify-center px-8 sm:px-12 lg:px-16 group cursor-pointer">
                                 <img
                                     src={logo.src}
                                     alt={logo.name}
                                     loading="lazy"
                                     title={logo.name}
-                                    className="h-8 w-auto object-contain max-w-[130px] opacity-40 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
+                                    className="h-7 sm:h-8 w-auto object-contain max-w-[130px] opacity-40 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
                                     style={{ filter: 'grayscale(1) invert(1)' }}
                                 />
                             </div>
