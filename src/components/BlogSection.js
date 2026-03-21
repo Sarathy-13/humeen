@@ -63,18 +63,22 @@ const BlogSection = () => {
     const filteredPosts = activeFilter === 'All' ? blogPosts : blogPosts.filter((post) => post.category === activeFilter);
 
     useEffect(() => {
+        gsap.set('.blog-card-item', { transformPerspective: 1000, transformOrigin: '50% 100%' });
         gsap.fromTo(
             '.blog-card-item',
-            { opacity: 0, y: 30 },
+            { opacity: 0, y: 100, scale: 0.95, rotateX: -15, filter: 'blur(10px)' },
             {
                 opacity: 1,
                 y: 0,
-                duration: 0.8,
-                stagger: 0.1,
-                ease: 'power3.out',
+                scale: 1,
+                rotateX: 0,
+                filter: 'blur(0px)',
+                duration: 0.7,
+                stagger: 0.15,
+                ease: 'expo.out',
                 scrollTrigger: {
                     trigger: sectionRef.current,
-                    start: 'top 60%',
+                    start: 'top 75%',
                 },
             },
         );

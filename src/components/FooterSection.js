@@ -40,8 +40,8 @@ const FooterSection = () => {
                         <a href="#" className="block text-[#A0A0A0] text-sm hover:text-white hover:translate-x-[5px] transition-all duration-300 mb-3">
                             Contact
                         </a>
-                        <a href="mailto:hello@humeen.com" className="block text-[#A0A0A0] text-sm hover:text-white hover:translate-x-[5px] transition-all duration-300 mb-3 break-all">
-                            hello@humeen.com
+                        <a href="mailto:hey@humeen.com" className="block text-[#A0A0A0] text-sm hover:text-white hover:translate-x-[5px] transition-all duration-300 mb-3 break-all">
+                            hey@humeen.com
                         </a>
                         <a href="tel:+441234567890" className="block text-[#A0A0A0] text-sm hover:text-white hover:translate-x-[5px] transition-all duration-300 mb-6">
                             +44 123 456 7890

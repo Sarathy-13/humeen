@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import CommonPageHeader from './CommonPageHeader';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const TRUST_LOGOS = ['Airbnb', 'Spotify', 'Slack', 'Stripe', 'Notion', 'Figma', 'Shopify', 'HubSpot'];
 
-const AgencyPage = ({ onBack, focusSectionId }) => {
+const AgencyPage = ({ onBack, focusSectionId, showHeader = true }) => {
     const pageRef = useRef(null);
 
     useEffect(() => {
@@ -52,18 +53,7 @@ const AgencyPage = ({ onBack, focusSectionId }) => {
 
     return (
         <div ref={pageRef} data-page-root="agency" className="bg-black min-h-screen font-sans selection:bg-white selection:text-black">
-            <header className="fixed top-0 left-0 w-full z-[100] glass px-8 py-6 flex items-center justify-between agency-enter-stagger">
-                <button onClick={onBack} className="text-white/50 hover:text-white transition-colors flex items-center gap-2 text-sm font-bold uppercase tracking-widest">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-                    </svg>
-                    Back
-                </button>
-                <a href="#" className="text-white text-2xl font-black tracking-widest">
-                    HUMEEN.
-                </a>
-                <span className="text-white/20 text-xs uppercase tracking-widest font-bold">The Agency</span>
-            </header>
+            {showHeader && <CommonPageHeader onBack={onBack} rightLabel="The Agency" className="agency-enter-stagger" />}
 
             <section className="pt-48 pb-24 px-8 border-b border-white/5">
                 <div className="max-w-[1400px] mx-auto">

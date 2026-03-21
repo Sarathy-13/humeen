@@ -9,7 +9,6 @@ import BlogSection from './components/BlogSection';
 import CustomersSection from './components/CustomersSection';
 import FooterSection from './components/FooterSection';
 import CaseStudiesPage from './components/CaseStudiesPage';
-import LoadingScreen from './components/LoadingScreen';
 import ShaderBackground from './components/ShaderBackground';
 import ServicesPage from './components/ServicesPage';
 import WorksPage from './components/WorksPage';
@@ -17,6 +16,76 @@ import CareersPage from './components/CareersPage';
 import FounderNotesPage from './components/FounderNotesPage';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const REGION_OPTIONS = [
+    { value: 'GCC', label: 'GCC' },
+    { value: 'INDIA', label: 'INDIA' },
+];
+
+const RegionDropdown = ({ id, value, onChange, className = '', buttonClassName = '' }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const containerRef = useRef(null);
+    const selectedOption = REGION_OPTIONS.find((option) => option.value === value) || REGION_OPTIONS[0];
+
+    useEffect(() => {
+        const handleOutsideClick = (event) => {
+            if (containerRef.current && !containerRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        const handleEscape = (event) => {
+            if (event.key === 'Escape') {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleOutsideClick);
+        document.addEventListener('keydown', handleEscape);
+
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, []);
+
+    return (
+        <div ref={containerRef} className={`relative ${className}`.trim()}>
+            <button
+                id={id}
+                type="button"
+                onClick={() => setIsOpen((prev) => !prev)}
+                className={`w-full text-left bg-white/5 border border-white/10 rounded-full font-bold tracking-widest uppercase hover:border-white/30 transition-colors ${buttonClassName}`.trim()}
+            >
+                <span className="text-white">{selectedOption.label}</span>
+            </button>
+
+            <svg className={`pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/50 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+            </svg>
+
+            {isOpen && (
+                <div className="absolute top-full mt-2 w-full overflow-hidden rounded-2xl border border-white/15 bg-[#0b101d]/95 backdrop-blur-xl shadow-2xl z-[140]">
+                    {REGION_OPTIONS.map((option) => (
+                        <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => {
+                                onChange(option.value);
+                                setIsOpen(false);
+                            }}
+                            className={`w-full text-left px-4 py-2.5 text-sm font-bold uppercase tracking-widest transition-colors ${
+                                option.value === value ? 'bg-[#0070FF]/20 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'
+                            }`}
+                        >
+                            {option.label}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
 
 const App = () => {
     const [isServicesOpen, setIsServicesOpen] = useState(false);
@@ -26,20 +95,10 @@ const App = () => {
     const [region, setRegion] = useState('GCC');
     const [currentPage, setCurrentPage] = useState('home');
     const [servicesFocusId, setServicesFocusId] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [pendingScrollTarget, setPendingScrollTarget] = useState(null);
     const cursorRef = useRef(null);
     const headerRef = useRef(null);
     const homePageRef = useRef(null);
-
-    useEffect(() => {
-        const loadingTimer = window.setTimeout(() => {
-            setIsLoading(false);
-        }, 2800);
-
-        return () => {
-            window.clearTimeout(loadingTimer);
-        };
-    }, []);
 
     useEffect(() => {
         const xTo = gsap.quickTo(cursorRef.current, 'x', { duration: 0.4, ease: 'power3' });
@@ -73,9 +132,30 @@ const App = () => {
             const intro = gsap.timeline();
 
             intro
-                .fromTo('.home-hero-media', { scale: 1.2, opacity: 0.2, filter: 'blur(10px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1.2, ease: 'power3.out' })
-                .fromTo('.home-hero-headline', { opacity: 0, y: 90, filter: 'blur(12px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1, ease: 'power4.out' }, '-=0.9')
-                .fromTo('.home-enter-stagger', { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.85, stagger: 0.1, ease: 'power3.out' }, '-=0.75');
+                .fromTo('.home-hero-media', { scale: 1.2, opacity: 0.2, filter: 'blur(10px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.6, ease: 'power3.out' })
+                .fromTo('.home-hero-headline', { opacity: 0, filter: 'blur(12px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.3 }, '-=0.4')
+                .fromTo('.scattered-char', { 
+                    opacity: 0,
+                    x: () => (Math.random() - 0.5) * 800,
+                    y: () => (Math.random() - 0.5) * 800,
+                    rotationZ: () => (Math.random() - 0.5) * 180,
+                    scale: () => Math.random() * 2,
+                    filter: 'blur(10px)'
+                }, {
+                    opacity: 1,
+                    x: 0,
+                    y: 0,
+                    rotationZ: 0,
+                    scale: 1,
+                    filter: 'blur(0px)',
+                    duration: 0.7,
+                    stagger: {
+                        amount: 0.3,
+                        from: 'random'
+                    },
+                    ease: 'back.out(1.5)'
+                }, '-=0.2')
+                .fromTo('.home-enter-stagger', { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: 'power3.out' }, '-=0.3');
 
             gsap.utils.toArray('.home-section-reveal').forEach((section) => {
                 gsap.fromTo(
@@ -104,9 +184,35 @@ const App = () => {
         setIsMobileMenuOpen(false);
     }, [currentPage]);
 
-    const openServicesPage = (serviceId = null) => {
-        setServicesFocusId(serviceId);
+    useEffect(() => {
+        if (currentPage !== 'home' || !pendingScrollTarget) return;
+
+        window.requestAnimationFrame(() => {
+            const target = document.getElementById(pendingScrollTarget);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            setPendingScrollTarget(null);
+        });
+    }, [currentPage, pendingScrollTarget]);
+
+    const openServicesOverview = () => {
+        setServicesFocusId(null);
         setCurrentPage('services');
+        setIsServicesOpen(false);
+        setIsAgencyOpen(false);
+        setIsMobileMenuOpen(false);
+        window.scrollTo(0, 0);
+    };
+
+    const openServicesPage = (serviceId = null) => {
+        if (!serviceId) {
+            openServicesOverview();
+            return;
+        }
+
+        setServicesFocusId(serviceId);
+        setCurrentPage('service-detail');
         setIsServicesOpen(false);
         setIsAgencyOpen(false);
         setIsMobileMenuOpen(false);
@@ -138,44 +244,55 @@ const App = () => {
         window.scrollTo(0, 0);
     };
 
-    const scrollToBlog = () => {
+    const openBlogPage = () => {
+        setCurrentPage('blog');
         setIsAgencyOpen(false);
         setIsServicesOpen(false);
         setIsMobileMenuOpen(false);
-
-        window.requestAnimationFrame(() => {
-            const blogSection = document.getElementById('blog');
-            if (blogSection) {
-                blogSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
+        setServicesFocusId(null);
+        window.scrollTo(0, 0);
     };
 
     return (
         <div className="relative w-full min-h-screen bg-black overflow-x-hidden selection:bg-white selection:text-black">
             <ShaderBackground />
-            {isLoading && <LoadingScreen />}
             <div ref={cursorRef} className="custom-cursor"></div>
             <div className="grain-overlay"></div>
             <HireUsModal isOpen={isHireUsOpen} onClose={() => setIsHireUsOpen(false)} />
 
             <div className="relative z-10">
-                {currentPage === 'cases' && <CaseStudiesPage onBack={openHomePage} />}
+                {currentPage === 'cases' && <CaseStudiesPage onBack={openHomePage} showHeader={false} />}
 
-                {currentPage === 'services' && <ServicesPage onBack={openHomePage} onOpenHire={() => setIsHireUsOpen(true)} focusServiceId={servicesFocusId} />}
+                {currentPage === 'services' && <ServicesPage onBack={openHomePage} onOpenHire={() => setIsHireUsOpen(true)} showHeader={false} />}
 
-                {currentPage === 'works' && <WorksPage onBack={openHomePage} />}
+                {currentPage === 'service-detail' && (
+                    <ServicesPage onBack={openServicesOverview} onOpenHire={() => setIsHireUsOpen(true)} focusServiceId={servicesFocusId} singleServiceId={servicesFocusId} showHeader={false} />
+                )}
 
-                {currentPage === 'careers' && <CareersPage onBack={openHomePage} />}
+                {currentPage === 'works' && <WorksPage onBack={openHomePage} showHeader={false} />}
 
-                {currentPage === 'founder-notes' && <FounderNotesPage onBack={openHomePage} />}
+                {currentPage === 'careers' && <CareersPage onBack={openHomePage} showHeader={false} />}
 
-                {currentPage === 'home' && (
-                    <div ref={homePageRef}>
-                        <header ref={headerRef} className="fixed top-0 left-0 w-full z-[100] transition-all duration-500 glass px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 home-enter-stagger relative">
+                {currentPage === 'founder-notes' && <FounderNotesPage onBack={openHomePage} showHeader={false} />}
+
+                {currentPage === 'blog' && (
+                    <div className="pt-24 sm:pt-28 lg:pt-32 bg-white min-h-screen pb-16">
+                        <BlogSection />
+                    </div>
+                )}
+
+                <div ref={currentPage === 'home' ? homePageRef : null}>
+                        <header ref={headerRef} className="fixed top-0 left-0 w-full z-[100] transition-all duration-500 glass px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 opacity-100">
                             <div className="max-w-[1600px] mx-auto flex items-center justify-between">
                                 <div className="flex-1 min-w-0">
-                                    <a href="#" className="text-white text-lg sm:text-xl lg:text-2xl font-black tracking-widest">
+                                    <a
+                                        href="#"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            openHomePage();
+                                        }}
+                                        className="text-white text-lg sm:text-xl lg:text-2xl font-black tracking-widest"
+                                    >
                                         HUMEEN.
                                     </a>
                                 </div>
@@ -207,7 +324,7 @@ const App = () => {
                                     </div>
                                     <button
                                         type="button"
-                                        onClick={scrollToBlog}
+                                        onClick={openBlogPage}
                                         className="text-white/70 text-sm font-bold uppercase tracking-widest hover:text-white transition-colors"
                                         onMouseEnter={() => { setIsAgencyOpen(false); setIsServicesOpen(false); }}
                                     >
@@ -223,22 +340,7 @@ const App = () => {
                                 </div>
 
                                 <div className="hidden lg:flex flex-1 items-center justify-end gap-6 text-white text-sm font-medium tracking-widest uppercase">
-                                    <div className="relative bg-white/5 border border-white/10 rounded-full p-1 flex items-center">
-                                        <div
-                                            id="region-indicator"
-                                            className="absolute h-[calc(100%-8px)] rounded-full bg-[#0070FF] transition-all duration-300 pointer-events-none"
-                                            style={{
-                                                width: 'calc(50% - 4px)',
-                                                left: region === 'GCC' ? '4px' : 'calc(50%)',
-                                            }}
-                                        ></div>
-                                        <button onClick={() => setRegion('GCC')} className={`relative z-10 px-6 py-2 rounded-full transition-colors ${region === 'GCC' ? 'text-white' : 'text-white/40 hover:text-white'}`}>
-                                            GCC
-                                        </button>
-                                        <button onClick={() => setRegion('INDIA')} className={`relative z-10 px-6 py-2 rounded-full transition-colors ${region === 'INDIA' ? 'text-white' : 'text-white/40 hover:text-white'}`}>
-                                            INDIA
-                                        </button>
-                                    </div>
+                                    <RegionDropdown id="region-select-desktop" value={region} onChange={setRegion} className="w-[168px]" buttonClassName="py-2.5 pl-5 pr-10 text-sm" />
 
                                     <button onClick={() => setIsHireUsOpen(true)} className="py-3 px-8 border border-white/20 hover:bg-white hover:text-black transition-all duration-300">
                                         HIRE US
@@ -275,107 +377,103 @@ const App = () => {
                             <MegaMenu isOpen={isServicesOpen} onSelectService={openServicesPage} />
                             <AgencyDropdown isOpen={isAgencyOpen} onSelectSection={openAgencyItemPage} />
 
-                            {isMobileMenuOpen && (
-                                <div className="lg:hidden mt-3 sm:mt-4 ml-auto w-full sm:w-[360px] rounded-2xl border border-white/10 bg-[#0b101d]/95 backdrop-blur-xl p-5 sm:p-6 space-y-5 shadow-2xl">
+                                                        {isMobileMenuOpen && (
+                                <div className="lg:hidden mt-3 sm:mt-4 ml-auto w-full sm:w-[360px] rounded-2xl border border-white/10 bg-[#0b101d]/95 backdrop-blur-xl p-5 sm:p-6 space-y-4 shadow-2xl">
                                     <button
                                         type="button"
                                         onClick={() => openServicesPage()}
-                                        className="w-full text-left text-white text-sm font-bold uppercase tracking-widest hover:text-[#78a3ff] transition-colors"
+                                        className="w-full text-left text-white text-sm font-bold uppercase tracking-widest hover:text-[#78a3ff] transition-colors block"
                                     >
                                         Our Services
                                     </button>
-                                    <div className="space-y-3 border-t border-white/10 pt-4">
-                                        <button
-                                            type="button"
-                                            onClick={() => openAgencyItemPage('works')}
-                                            className="w-full text-left text-white/80 text-sm font-bold uppercase tracking-widest hover:text-white transition-colors"
-                                        >
-                                            Works
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => openAgencyItemPage('careers')}
-                                            className="w-full text-left text-white/80 text-sm font-bold uppercase tracking-widest hover:text-white transition-colors"
-                                        >
-                                            Careers
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => openAgencyItemPage('founder-notes')}
-                                            className="w-full text-left text-white/80 text-sm font-bold uppercase tracking-widest hover:text-white transition-colors"
-                                        >
-                                            Founder Notes
-                                        </button>
-                                    </div>
+                                    <div className="w-full h-px bg-white/10"></div>
                                     <button
                                         type="button"
-                                        onClick={scrollToBlog}
-                                        className="w-full text-left text-white text-sm font-bold uppercase tracking-widest hover:text-[#78a3ff] transition-colors"
+                                        onClick={() => openAgencyItemPage('works')}
+                                        className="w-full text-left text-white text-sm font-bold uppercase tracking-widest hover:text-[#78a3ff] transition-colors block"
+                                    >
+                                        Works
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => openAgencyItemPage('careers')}
+                                        className="w-full text-left text-white text-sm font-bold uppercase tracking-widest hover:text-[#78a3ff] transition-colors block"
+                                    >
+                                        Careers
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => openAgencyItemPage('founder-notes')}
+                                        className="w-full text-left text-white text-sm font-bold uppercase tracking-widest hover:text-[#78a3ff] transition-colors block"
+                                    >
+                                        Founder Notes
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={openBlogPage}
+                                        className="w-full text-left text-white text-sm font-bold uppercase tracking-widest hover:text-[#78a3ff] transition-colors block"
                                     >
                                         Blog
                                     </button>
                                     <button
                                         type="button"
                                         onClick={openCasesPage}
-                                        className="w-full text-left text-white text-sm font-bold uppercase tracking-widest hover:text-[#78a3ff] transition-colors"
+                                        className="w-full text-left text-white text-sm font-bold uppercase tracking-widest hover:text-[#78a3ff] transition-colors block"
                                     >
                                         Customer Cases
                                     </button>
 
-                                    <div className="border-t border-white/10 pt-4">
+                                    <div className="border-t border-white/10 pt-4 pb-1">
                                         <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold mb-3">Region</p>
-                                        <div className="relative bg-white/5 border border-white/10 rounded-full p-1 flex items-center">
-                                            <div
-                                                className="absolute h-[calc(100%-8px)] rounded-full bg-[#0070FF] transition-all duration-300 pointer-events-none"
-                                                style={{
-                                                    width: 'calc(50% - 4px)',
-                                                    left: region === 'GCC' ? '4px' : 'calc(50%)',
-                                                }}
-                                            ></div>
-                                            <button onClick={() => setRegion('GCC')} className={`relative z-10 flex-1 px-4 py-2 rounded-full text-xs font-bold tracking-widest transition-colors ${region === 'GCC' ? 'text-white' : 'text-white/40 hover:text-white'}`}>
-                                                GCC
-                                            </button>
-                                            <button onClick={() => setRegion('INDIA')} className={`relative z-10 flex-1 px-4 py-2 rounded-full text-xs font-bold tracking-widest transition-colors ${region === 'INDIA' ? 'text-white' : 'text-white/40 hover:text-white'}`}>
-                                                INDIA
-                                            </button>
-                                        </div>
+                                        <RegionDropdown id="region-select-mobile" value={region} onChange={setRegion} buttonClassName="py-2.5 pl-4 pr-10 text-xs" />
                                     </div>
                                 </div>
                             )}
                         </header>
 
-                        <section id="hero" className="relative min-h-[100svh] w-full flex items-center justify-center overflow-hidden home-enter-stagger">
-                            <div className="absolute inset-0 home-hero-media hero-shader-vignette"></div>
+                        {currentPage === 'home' && (
+                            <>
+                                <section id="hero" className="relative min-h-[100svh] w-full flex items-center justify-center overflow-hidden home-enter-stagger">
+                                    <div className="absolute inset-0 home-hero-media hero-shader-vignette"></div>
 
-                            <div className="relative z-10 pointer-events-none">
-                                <h1 className="text-[2.8rem] sm:text-6xl md:text-8xl lg:text-[12rem] font-black leading-none text-center outline-text difference-mode uppercase select-none home-hero-headline hero-spotlight">
-                                    WE BUILD
-                                    <br />
-                                    LEGACIES
-                                </h1>
-                            </div>
+                                    <div className="relative z-10 pointer-events-none">
+                                        <h1 className="text-[2.8rem] sm:text-6xl md:text-8xl lg:text-[12rem] font-black leading-none text-center outline-text difference-mode uppercase select-none home-hero-headline hero-spotlight">
+                                            {"WE BUILD".split('').map((char, i) => (
+                                                <span key={`w1-${i}`} className="inline-block scattered-char" style={{ whiteSpace: char === ' ' ? 'pre' : 'normal' }}>
+                                                    {char}
+                                                </span>
+                                            ))}
+                                            <br />
+                                            {"LEGACIES".split('').map((char, i) => (
+                                                <span key={`w2-${i}`} className="inline-block scattered-char" style={{ whiteSpace: char === ' ' ? 'pre' : 'normal' }}>
+                                                    {char}
+                                                </span>
+                                            ))}
+                                        </h1>
+                                    </div>
 
-                            <a href="#quiz" className="absolute bottom-14 sm:bottom-10 lg:bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 opacity-40 hover:opacity-100 transition-opacity home-enter-stagger text-center">
-                                <span className="text-[10px] uppercase tracking-[0.5em] sm:tracking-[0.6em] font-medium text-white">Scroll to explore</span>
-                                <div className="w-[1px] h-16 bg-gradient-to-b from-white to-transparent scroll-indicator-line"></div>
-                            </a>
-                        </section>
+                                    <a href="#quiz" className="absolute bottom-14 sm:bottom-10 lg:bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 opacity-40 hover:opacity-100 transition-opacity home-enter-stagger text-center">
+                                        <span className="text-[10px] uppercase tracking-[0.5em] sm:tracking-[0.6em] font-medium text-white">Scroll to explore</span>
+                                        <div className="w-[1px] h-16 bg-gradient-to-b from-white to-transparent scroll-indicator-line"></div>
+                                    </a>
+                                </section>
 
-                        <div id="quiz" className="home-section-reveal">
-                            <AcquisitionQuiz />
-                        </div>
+                                <div id="quiz" className="home-section-reveal">
+                                    <AcquisitionQuiz />
+                                </div>
 
-                        <div className="home-section-reveal">
-                            <BlogSection />
-                        </div>
-                        <div className="home-section-reveal">
-                            <CustomersSection />
-                        </div>
-                        <div className="home-section-reveal">
-                            <FooterSection />
-                        </div>
-                    </div>
-                )}
+                                <div className="home-section-reveal">
+                                    <BlogSection />
+                                </div>
+                                <div className="home-section-reveal">
+                                    <CustomersSection />
+                                </div>
+                                <div className="home-section-reveal">
+                                    <FooterSection />
+                                </div>
+                            </>
+                        )}
+                </div>
             </div>
         </div>
     );

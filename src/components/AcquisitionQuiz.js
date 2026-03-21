@@ -7,6 +7,7 @@ gsap.registerPlugin(ScrollTrigger);
 const AcquisitionQuiz = () => {
     const [step, setStep] = useState(1);
     const [answers, setAnswers] = useState({});
+    const [isSubmitted, setIsSubmitted] = useState(false);
     const cardRef = useRef(null);
     const questionRef = useRef(null);
 
@@ -45,6 +46,29 @@ const AcquisitionQuiz = () => {
             onComplete: () => {
                 setStep(nextStep);
                 gsap.fromTo(questionRef.current, { x: 50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: 'power2.out' });
+            },
+        });
+    };
+
+    const handleSubmit = () => {
+        if (!answers[step]) return;
+        
+        const subject = encodeURIComponent("New Acquisition Quiz Submission");
+        let bodyText = "Hello Humeen team,\n\nHere are the results from the new Acquisition Quiz:\n\n";
+        questions.forEach((q) => {
+            bodyText += `Q: ${q.text}\nA: ${answers[q.id]}\n\n`;
+        });
+        const body = encodeURIComponent(bodyText);
+        
+        window.location.href = `mailto:hey@humeen.com?subject=${subject}&body=${body}`;
+        
+        gsap.to(questionRef.current, {
+            y: -50,
+            opacity: 0,
+            duration: 0.3,
+            onComplete: () => {
+                setIsSubmitted(true);
+                gsap.fromTo(questionRef.current, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: 'power2.out' });
             },
         });
     };
@@ -88,7 +112,19 @@ const AcquisitionQuiz = () => {
 
                 <div ref={cardRef} className="bg-[#121212] rounded-2xl p-5 sm:p-8 md:p-12 lg:p-16 shadow-2xl border border-white/10">
                     <div ref={questionRef}>
-                        <div className="mb-8 sm:mb-10 md:mb-12">
+                        {isSubmitted ? (
+                            <div className="text-center py-10 sm:py-20 animate-fade-in">
+                                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-[#0070FF]/20 rounded-full flex items-center justify-center mx-auto mb-6 sm:mb-8">
+                                    <svg className="w-10 h-10 sm:w-12 sm:h-12 text-[#0070FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 sm:mb-6">Results Sent!</h3>
+                                <p className="text-white/60 text-lg sm:text-xl max-w-md mx-auto">Thank you. We'll be in touch with your personalized growth strategy shortly.</p>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="mb-8 sm:mb-10 md:mb-12">
                             <p className="text-[#0070FF] text-xs uppercase tracking-widest font-bold mb-4">
                                 Question {step} OF {questions.length}
                             </p>
@@ -123,9 +159,12 @@ const AcquisitionQuiz = () => {
                                 ))
                             )}
                         </div>
+                            </>
+                        )}
                     </div>
 
-                    <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-t border-white/5 pt-6 sm:pt-8 md:pt-10">
+                    {!isSubmitted && (
+                        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-t border-white/5 pt-6 sm:pt-8 md:pt-10">
                         <button
                             onClick={() => handleStepTransition('prev')}
                             disabled={step === 1}
@@ -137,12 +176,14 @@ const AcquisitionQuiz = () => {
                             Previous
                         </button>
                         <button
-                            onClick={() => (step === questions.length ? null : handleStepTransition('next'))}
-                            className="w-full sm:w-auto bg-[#0070FF] text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full text-xs uppercase tracking-widest font-black hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(0,112,255,0.3)] shadow-xl"
+                            onClick={() => (step === questions.length ? handleSubmit() : handleStepTransition('next'))}
+                            disabled={!answers[step]}
+                            className={`w-full sm:w-auto bg-[#0070FF] text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full text-xs uppercase tracking-widest font-black transition-all shadow-[0_0_20px_rgba(0,112,255,0.3)] shadow-xl ${!answers[step] ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}`}
                         >
                             {step === questions.length ? 'Get Results' : 'Following'}
                         </button>
-                    </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </section>

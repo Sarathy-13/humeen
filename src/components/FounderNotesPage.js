@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import CommonPageHeader from './CommonPageHeader';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const FounderNotesPage = ({ onBack }) => {
+const FounderNotesPage = ({ onBack, showHeader = true }) => {
     const pageRef = useRef(null);
 
     useEffect(() => {
@@ -14,19 +15,22 @@ const FounderNotesPage = ({ onBack }) => {
             gsap.fromTo('.founder-enter-stagger', { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 0.85, stagger: 0.08, ease: 'power3.out' });
             gsap.fromTo('.founder-headline', { opacity: 0, y: 80, filter: 'blur(12px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1, ease: 'power4.out' });
 
-            gsap.utils.toArray('.founder-card').forEach((card) => {
+            gsap.utils.toArray('.founder-notes-card').forEach((card) => {
+                gsap.set(card, { transformPerspective: 1000, transformOrigin: '50% 100%' });
                 gsap.fromTo(
                     card,
-                    { opacity: 0, y: 70, scale: 0.98 },
+                    { opacity: 0, y: 120, scale: 0.95, rotateX: -15, filter: 'blur(15px)' },
                     {
                         opacity: 1,
                         y: 0,
                         scale: 1,
-                        duration: 0.9,
-                        ease: 'power3.out',
+                        rotateX: 0,
+                        filter: 'blur(0px)',
+                        duration: 0.7,
+                        ease: 'expo.out',
                         scrollTrigger: {
                             trigger: card,
-                            start: 'top 86%',
+                            start: 'top 88%',
                             once: true,
                         },
                     },
@@ -39,18 +43,7 @@ const FounderNotesPage = ({ onBack }) => {
 
     return (
         <div ref={pageRef} data-page-root="founder-notes" className="bg-black min-h-screen font-sans selection:bg-white selection:text-black">
-            <header className="fixed top-0 left-0 w-full z-[100] glass px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 flex items-center justify-between founder-enter-stagger">
-                <button onClick={onBack} className="text-white/50 hover:text-white transition-colors flex items-center gap-2 text-sm font-bold uppercase tracking-widest">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-                    </svg>
-                    <span className="hidden sm:inline">Back</span>
-                </button>
-                <a href="#" className="text-white text-lg sm:text-xl md:text-2xl font-black tracking-widest">
-                    HUMEEN.
-                </a>
-                <span className="hidden md:block text-white/20 text-xs uppercase tracking-widest font-bold">Founder Notes</span>
-            </header>
+            {showHeader && <CommonPageHeader onBack={onBack} rightLabel="Founder Notes" className="founder-enter-stagger" />}
 
             <section className="pt-32 sm:pt-40 lg:pt-48 pb-16 sm:pb-20 lg:pb-24 px-4 sm:px-6 lg:px-8 border-b border-white/5">
                 <div className="max-w-[1400px] mx-auto">
@@ -65,34 +58,67 @@ const FounderNotesPage = ({ onBack }) => {
             </section>
 
             <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-[1400px] mx-auto">
-                    <article className="founder-card border border-white/10 bg-[#07090f]/95 rounded-3xl p-5 sm:p-8 md:p-12">
-                        <h2 className="text-white text-2xl sm:text-3xl md:text-5xl font-black leading-tight mb-6">Objective</h2>
-                        <p className="text-white/70 text-sm leading-relaxed mb-6">To establish a personal, Humanoid connection with the brand's philosophy.</p>
-                        <ul className="space-y-4 text-white/70 text-sm leading-relaxed">
-                            <li>
-                                <span className="text-white font-bold">Introduction:</span> In an era of automated, soulless agency models, Humeen is a deliberate return to intentionality.
-                            </li>
-                            <li>
-                                <span className="text-white font-bold">The Manifesto:</span>
-                                <ul className="mt-2 space-y-2 text-white/60">
-                                    <li>
-                                        <span className="text-white font-semibold">Beyond the Trend:</span> Many agencies chase every new software or design style. We ignore the noise and focus on what objectively moves the revenue
-                                        needle.
-                                    </li>
-                                    <li>
-                                        <span className="text-white font-semibold">The Humeen Difference:</span> Most agencies provide service; we provide a competitive advantage. Your success is the only KPI that matters to us.
-                                    </li>
-                                    <li>
-                                        <span className="text-white font-semibold">Direct Access:</span> I built this agency to be the partner I wanted when I was in your shoes, transparent, aggressive, and obsessed with the craft.
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <span className="text-white font-bold">Personal Commitment:</span> My promise is that every project, whether it is a landing page or a multi-platform acquisition strategy, is held to the highest standard
-                                of technical and creative rigor.
-                            </li>
-                        </ul>
+                <div className="max-w-[900px] mx-auto relative group">
+                    {/* Artistic Background Flourish */}
+                    <div className="absolute -inset-1 bg-gradient-to-r from-[#0070FF]/20 via-[#0070FF]/0 to-[#0070FF]/20 rounded-[3rem] blur-xl opacity-50 group-hover:opacity-100 transition-opacity duration-1000 -z-10"></div>
+                    
+                    <article className="founder-notes-card relative bg-[#07090f]/95 rounded-[2.5rem] p-8 sm:p-12 md:p-16 border border-white/10 shadow-2xl overflow-hidden backdrop-blur-xl group-hover:border-white/20 transition-all duration-700">
+                        {/* Quote mark accent */}
+                        <div className="absolute top-8 right-8 md:top-12 md:right-12 text-[#0070FF]/10 text-[12rem] leading-none font-serif rotate-12 -z-10 select-none">"</div>
+                        
+                        <div className="relative z-10">
+                            <h2 className="text-white text-3xl sm:text-4xl md:text-5xl font-black leading-tight mb-2">Objective</h2>
+                            <p className="text-[#0070FF] text-sm md:text-base font-bold tracking-[0.2em] uppercase mb-10">
+                                To establish a personal, Humanoid connection with the brand's philosophy.
+                            </p>
+
+                            <div className="space-y-8 text-white/70 text-base md:text-lg leading-relaxed relative">
+                                {/* Left line accent */}
+                                <div className="absolute left-0 top-2 bottom-2 w-px bg-gradient-to-b from-white/0 via-white/10 to-white/0"></div>
+                                
+                                <p className="pl-6 sm:pl-8">
+                                    <span className="text-white font-black uppercase text-xs tracking-widest block mb-2 opacity-50">Introduction</span>
+                                    In an era of automated, soulless agency models, Humeen is a deliberate return to intentionality.
+                                </p>
+                                
+                                <div className="pl-6 sm:pl-8 pt-6 border-t border-white/5 space-y-6">
+                                    <span className="text-white font-black uppercase text-xs tracking-widest block mb-4">The Manifesto</span>
+                                    
+                                    <div className="group/item hover:-translate-y-1 transition-transform">
+                                        <p className="text-white font-bold mb-1 flex items-center gap-3">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-[#0070FF]"></span> Beyond the Trend
+                                        </p>
+                                        <p className="pl-4 text-sm text-white/50">Many agencies chase every new software or design style. We ignore the noise and focus on what objectively moves the revenue needle.</p>
+                                    </div>
+                                    
+                                    <div className="group/item hover:-translate-y-1 transition-transform">
+                                        <p className="text-white font-bold mb-1 flex items-center gap-3">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-[#0070FF]"></span> The Humeen Difference
+                                        </p>
+                                        <p className="pl-4 text-sm text-white/50">Most agencies provide service; we provide a competitive advantage. Your success is the only KPI that matters to us.</p>
+                                    </div>
+                                    
+                                    <div className="group/item hover:-translate-y-1 transition-transform">
+                                        <p className="text-white font-bold mb-1 flex items-center gap-3">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-[#0070FF]"></span> Direct Access
+                                        </p>
+                                        <p className="pl-4 text-sm text-white/50">I built this agency to be the partner I wanted when I was in your shoes: transparent, aggressive, and obsessed with the craft.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mt-12 pt-8 border-t border-[#0070FF]/20 flex items-start gap-6">
+                                <div className="hidden sm:flex w-16 h-16 rounded-full bg-white/5 items-center justify-center border border-white/10 shrink-0">
+                                    <svg className="w-6 h-6 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                                </div>
+                                <div>
+                                    <span className="text-[#0070FF] font-black uppercase text-xs tracking-widest block mb-2">Personal Commitment</span>
+                                    <p className="text-white text-lg sm:text-xl font-bold italic leading-relaxed">
+                                        "My promise is that every project, whether it is a landing page or a multi-platform acquisition strategy, is held to the highest standard of technical and creative rigor."
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </article>
                 </div>
             </section>

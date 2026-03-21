@@ -61,8 +61,8 @@ const HireUsModal = ({ isOpen, onClose }) => {
                     <div className="mb-10 text-white/60 text-sm">
                         <p className="mb-1">
                             Email us at:{' '}
-                            <a href="mailto:hello@humeen.com" className="text-white hover:underline">
-                                hello@humeen.com
+                            <a href="mailto:hey@humeen.com" className="text-white hover:underline">
+                                hey@humeen.com
                             </a>
                         </p>
                         <p>
@@ -89,11 +89,10 @@ const HireUsModal = ({ isOpen, onClose }) => {
                             </div>
                             <div className="space-y-2">
                                 <label className="text-xs uppercase tracking-widest text-white/40 font-bold">File Attachment</label>
-                                <select className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white/40 focus:border-blue-600 outline-none transition-colors appearance-none cursor-pointer">
-                                    <option>Selection...</option>
-                                    <option>Brief.pdf</option>
-                                    <option>Design.zip</option>
-                                </select>
+                                <input 
+                                    type="file" 
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white/40 focus:border-blue-600 outline-none transition-colors cursor-pointer file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/20 file:transition-colors file:cursor-pointer" 
+                                />
                             </div>
                         </div>
 

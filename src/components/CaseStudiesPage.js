@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import CommonPageHeader from './CommonPageHeader';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const CaseStudiesPage = ({ onBack }) => {
+const CaseStudiesPage = ({ onBack, showHeader = true }) => {
     const pageRef = useRef(null);
 
     const cases = [
@@ -99,19 +100,21 @@ const CaseStudiesPage = ({ onBack }) => {
             );
 
             gsap.utils.toArray('.case-card').forEach((card) => {
+                gsap.set(card, { transformPerspective: 1000, transformOrigin: '50% 100%' });
                 gsap.fromTo(
                     card,
-                    { opacity: 0, y: 90, scale: 0.97, rotateX: 8 },
+                    { opacity: 0, y: 120, scale: 0.95, rotateX: -15, filter: 'blur(15px)' },
                     {
                         opacity: 1,
                         y: 0,
                         scale: 1,
                         rotateX: 0,
-                        duration: 0.95,
-                        ease: 'power3.out',
+                        filter: 'blur(0px)',
+                        duration: 0.7,
+                        ease: 'expo.out',
                         scrollTrigger: {
                             trigger: card,
-                            start: 'top 82%',
+                            start: 'top 88%',
                             once: true,
                         },
                     },
@@ -140,18 +143,7 @@ const CaseStudiesPage = ({ onBack }) => {
 
     return (
         <div ref={pageRef} data-page-root="cases" className="bg-black min-h-screen font-sans selection:bg-white selection:text-black">
-            <header className="fixed top-0 left-0 w-full z-[100] glass px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 flex items-center justify-between cases-enter-stagger">
-                <button onClick={onBack} className="text-white/50 hover:text-white transition-colors flex items-center gap-2 text-sm font-bold uppercase tracking-widest">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-                    </svg>
-                    <span className="hidden sm:inline">Back</span>
-                </button>
-                <a href="#" className="text-white text-lg sm:text-xl md:text-2xl font-black tracking-widest">
-                    HUMEEN.
-                </a>
-                <span className="hidden md:block text-white/20 text-xs uppercase tracking-widest font-bold">Customer Cases</span>
-            </header>
+            {showHeader && <CommonPageHeader onBack={onBack} rightLabel="Customer Cases" className="cases-enter-stagger" />}
 
             <section className="pt-32 sm:pt-40 lg:pt-48 pb-16 sm:pb-20 lg:pb-24 px-4 sm:px-6 lg:px-8 border-b border-white/5">
                 <div className="max-w-[1400px] mx-auto">
@@ -186,33 +178,45 @@ const CaseStudiesPage = ({ onBack }) => {
             <section className="py-14 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-[1400px] mx-auto flex flex-col gap-2">
                     {cases.map((c, i) => (
-                        <div key={c.id} className="group relative overflow-hidden rounded-2xl border border-white/5 flex flex-col md:flex-row md:h-[520px] hover:border-white/20 transition-all duration-500 case-card">
-                            <div className={`relative w-full md:w-1/2 overflow-hidden ${i % 2 === 1 ? 'md:order-2' : ''}`}>
-                                <img src={c.image} alt={c.client} loading="lazy" className="w-full h-64 md:h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" />
-                                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-all duration-500" />
-                                <span className="absolute top-6 left-6 px-4 py-1 bg-white text-black text-[10px] uppercase tracking-widest font-black rounded-full">{c.tag}</span>
+                        <div key={c.id} className="group relative overflow-hidden rounded-[2.5rem] flex flex-col md:h-[600px] case-card border border-white/10 shadow-2xl">
+                            {/* Full background image */}
+                            <div className="absolute inset-0 w-full h-full overflow-hidden">
+                                <img 
+                                    src={c.image} 
+                                    alt={c.client} 
+                                    loading="lazy" 
+                                    className="w-full h-full object-cover grayscale opacity-40 group-hover:scale-105 group-hover:grayscale-0 group-hover:opacity-60 transition-all duration-1000" 
+                                />
+                                {/* Gradient overlays for legibility */}
+                                <div className={`absolute inset-0 bg-gradient-to-r ${i % 2 === 0 ? 'from-[#07090f] via-[#07090f]/90 to-transparent' : 'from-transparent via-[#07090f]/90 to-[#07090f]'} transition-all duration-700`}></div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#07090f] via-transparent to-transparent"></div>
                             </div>
 
-                            <div className={`w-full md:w-1/2 bg-[#0a0a0a] p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col justify-between ${i % 2 === 1 ? 'md:order-1' : ''}`}>
-                                <div>
-                                    <div className="flex items-center gap-4 mb-6 sm:mb-8">
-                                        <span className="text-white/20 text-4xl sm:text-5xl md:text-6xl font-black leading-none">{c.id}</span>
-                                        <div>
-                                            <p className="text-white font-black text-xl">{c.client}</p>
-                                            <p className="text-white/30 text-xs uppercase tracking-widest">{c.category}</p>
+                            {/* Floating Glass Content Panel */}
+                            <div className={`relative z-10 w-full md:w-[65%] h-full flex flex-col justify-center p-8 sm:p-12 lg:p-16 ${i % 2 === 1 ? 'md:ml-auto' : ''}`}>
+                                <div className="backdrop-blur-xl bg-black/40 border border-white/10 p-8 sm:p-10 rounded-3xl group-hover:border-[#0070FF]/30 group-hover:bg-black/60 transition-all duration-500">
+                                    <div className="flex items-center justify-between mb-8">
+                                        <div className="flex items-center gap-4">
+                                            <span className="text-[#0070FF] text-4xl sm:text-5xl font-black leading-none">{c.id}</span>
+                                            <div>
+                                                <p className="text-white font-black text-xl lg:text-2xl">{c.client}</p>
+                                                <p className="text-white/50 text-[10px] sm:text-xs uppercase tracking-widest font-bold">{c.category}</p>
+                                            </div>
                                         </div>
+                                        <span className="hidden sm:inline-block px-4 py-1.5 bg-white/10 text-white text-[10px] uppercase tracking-widest font-black rounded-full border border-white/10">{c.tag}</span>
                                     </div>
-                                    <h2 className="text-white text-2xl md:text-3xl font-black leading-tight mb-6">{c.headline}</h2>
-                                    <p className="text-white/40 text-sm leading-relaxed mb-8 sm:mb-10">{c.description}</p>
-                                </div>
-
-                                <div className="border-t border-white/5 pt-6 sm:pt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                    {c.results.map((r) => (
-                                        <div key={r.label}>
-                                            <p className="text-white text-xl sm:text-2xl font-black mb-1">{r.value}</p>
-                                            <p className="text-white/30 text-[10px] uppercase tracking-widest font-bold">{r.label}</p>
-                                        </div>
-                                    ))}
+                                    
+                                    <h2 className="text-white text-2xl sm:text-3xl lg:text-4xl font-black leading-tight mb-6 group-hover:text-white transition-colors">{c.headline}</h2>
+                                    <p className="text-white/60 text-sm sm:text-base leading-relaxed mb-10 group-hover:text-white/80 transition-colors">{c.description}</p>
+                                    
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8 border-t border-white/10">
+                                        {c.results.map((r, idx) => (
+                                            <div key={r.label} className={`relative ${idx !== c.results.length - 1 ? 'sm:after:content-[\'\'] sm:after:absolute sm:after:right-0 sm:after:top-1/4 sm:after:h-1/2 sm:after:w-px sm:after:bg-white/10' : ''}`}>
+                                                <p className="text-white text-2xl sm:text-3xl font-black mb-1 group-hover:text-[#0070FF] transition-colors duration-500">{r.value}</p>
+                                                <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">{r.label}</p>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
